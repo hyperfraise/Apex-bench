@@ -23,6 +23,13 @@ if __name__ == "__main__":
     parser.add_argument("-ag", "--all_gpus", action="store_true")
     parser.add_argument("-t", "--transfer", action="store_true")
     parser.add_argument("-bt", "--bench_train", action="store_true")
+    parser.add_argument(
+        "-hm",
+        "--half_mode",
+        type=int,
+        default=0,
+        description="Should we use FP32 (0), or dumb half mode (1) or apex half mode (2)",
+    )
 
     config = parser.parse_args(sys.argv[1:])
     if config.all_gpus:
@@ -39,6 +46,8 @@ if __name__ == "__main__":
     )
     if not config.transfer:
         inputs = torch.from_numpy(data).cuda(config.device).float().div(255.0).add(-0.5)
+        if config.half_mode == 1:
+            inputs = inputs.half()
     labels = torch.from_numpy(np.random.choice(10, size=config.batch_size)).cuda(
         config.device
     )
@@ -53,37 +62,47 @@ if __name__ == "__main__":
         model.eval()
     if config.all_gpus:
         model = nn.DataParallel(model, device_ids=range(torch.cuda.device_count()))
+    if config.half_mode == 1:
+        model = model.half()
+
     optimizer = optim.Adam(model.parameters(), lr=0.001)
     criterion = nn.CrossEntropyLoss().cuda(config.device)
-    model, optimizer = amp.initialize(model, optimizer, opt_level="O1")
+    if config.half_mode == 2:
+        model, optimizer = amp.initialize(model, optimizer, opt_level="O1")
 
     t1 = time.time()
-    its = 0
-    vs = []
+    iterations = 0
+    values = []
     while 1:
         if config.transfer:
             inputs = (
                 torch.from_numpy(data).cuda(config.device).float().div(255.0).add(-0.5)
             )
+            if config.half_mode == 1:
+                inputs=inputs.half()
+
         if config.bench_train:
             outputs = model(inputs)
 
             loss = criterion(outputs, labels)
-            with amp.scale_loss(loss, optimizer) as scaled_loss:
-                scaled_loss.backward()
+            if config.half_mode == 2:
+                with amp.scale_loss(loss, optimizer) as scaled_loss:
+                    scaled_loss.backward()
+            else:
+                loss.backward()
             optimizer.step()
             optimizer.zero_grad()
         else:
             with torch.no_grad():
                 outputs = model(inputs)
 
-        vs.append((config.batch_size, time.time()))
-        vts = [x for x in vs[-config.window :]]
-        if its % 5 == 1 and its > 5:
+        values.append((config.batch_size, time.time()))
+        times = [x for x in vs[-config.window :]]
+        if iterations % 5 == 1 and iterations > 5:
             print(
-                int(1000 * (vts[-1][1] - vts[0][1]) / np.sum([x[0] for x in vts])),
+                int(1000 * (times[-1][1] - times[0][1]) / np.sum([x[0] for x in times])),
                 "ms",
-                np.sum([x[0] for x in vts]) / (vts[-1][1] - vts[0][1]),
+                np.sum([x[0] for x in times]) / (times[-1][1] - times[0][1]),
                 "samples",
             )
-        its += 1
+        iterations += 1
