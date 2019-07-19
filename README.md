@@ -120,7 +120,7 @@ Gradient overflow.  Skipping step, loss scaler 0 reducing loss scale to 1024.0
 212 ms per sample 4.710072016963902 samples per second
 ```
 
-Which is relevant with the "dumb" approach.
+Which is consistent with the "dumb" approach.
 
 ```
 veesion@alibaba:~/Apex-error$ python main.py -bs 8 -bt -hm 1
