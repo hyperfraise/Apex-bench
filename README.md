@@ -25,6 +25,7 @@ On both machines :
 >>> torch.__version__
 '1.1.0'
 Driver Version: 418.67       CUDA Version: 10.1 
+CUDNN 7.6.1
 ```
 
 
