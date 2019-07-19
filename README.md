@@ -2,6 +2,25 @@
 
 This script exhibits the problem of apex with 2080ti hardware.
 
+The config of the first machine, `hex` is :
+```
+2080 Ti
+AMD Ryzen Threadripper 1900X 
+```
+The config of the first machine, `alibaba` is :
+```
+1080 Ti
+Intel(R) Core(TM) i7-6850K
+```
+It's not due to any kind of single threaded performance (which is bullcrap anyway), because :
+```
+Single thread perf of 1900x : 112
+Single thread perf of i7-6850K : 116
+```
+
+You can't convince me that such a difference will have such an effect on deep learning, let alone ANY.
+
+
 ## 2080 ti bench
 
 Using O1 mode with apex allows a 2080 to see ~3 samples per second in training with the 3D resnext-101 architecture.
