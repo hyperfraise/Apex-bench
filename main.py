@@ -28,7 +28,7 @@ if __name__ == "__main__":
         "--half_mode",
         type=int,
         default=0,
-        description="Should we use FP32 (0), or dumb half mode (1) or apex half mode (2)",
+        help="Should we use FP32 (0), or dumb half mode (1) or apex half mode (2)",
     )
 
     config = parser.parse_args(sys.argv[1:])
