@@ -97,7 +97,7 @@ if __name__ == "__main__":
                 outputs = model(inputs)
 
         values.append((config.batch_size, time.time()))
-        times = [x for x in vs[-config.window :]]
+        times = [x for x in values[-config.window :]]
         if iterations % 5 == 1 and iterations > 5:
             print(
                 int(1000 * (times[-1][1] - times[0][1]) / np.sum([x[0] for x in times])),
