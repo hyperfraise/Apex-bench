@@ -101,8 +101,8 @@ if __name__ == "__main__":
         if iterations % 5 == 1 and iterations > 5:
             print(
                 int(1000 * (times[-1][1] - times[0][1]) / np.sum([x[0] for x in times])),
-                "ms",
+                "ms per sample",
                 np.sum([x[0] for x in times]) / (times[-1][1] - times[0][1]),
-                "samples",
+                "samples per second",
             )
         iterations += 1
