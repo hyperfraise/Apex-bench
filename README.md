@@ -18,7 +18,7 @@ Single thread perf of 1900x : 112
 Single thread perf of i7-6850K : 116
 ```
 
-You can't convince me that such a difference will have such an effect on deep learning, let alone ANY.
+You can't convince me that such a difference will have such an effect on deep learning, let alone ANY. But just to be sure, I also switched the cards, and it's the same result.
 
 
 ## 2080 ti bench
