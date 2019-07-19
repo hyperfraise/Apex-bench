@@ -23,7 +23,6 @@ if __name__ == "__main__":
     parser.add_argument("-ag", "--all_gpus", action="store_true")
     parser.add_argument("-t", "--transfer", action="store_true")
     parser.add_argument("-bt", "--bench_train", action="store_true")
-    normalization.initNorm("BN")
 
     config = parser.parse_args(sys.argv[1:])
     if config.all_gpus:
