@@ -20,6 +20,13 @@ Single thread perf of i7-6850K : 116
 
 You can't convince me that such a difference will have such an effect on deep learning, let alone ANY. But just to be sure, I also switched the cards, and it's the same result.
 
+On both machines :
+```
+>>> torch.__version__
+'1.1.0'
+Driver Version: 418.67       CUDA Version: 10.1 
+```
+
 
 ## 2080 ti bench
 
