@@ -1,7 +1,7 @@
 import torch
 import numpy as np
 import configargparse
-from model import resnext
+import resnext
 import time
 import sys
 from torch import optim as optim
